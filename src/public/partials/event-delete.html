@@ -1,0 +1,27 @@
+<div class="col-lg-12">
+    <h2>Delete Event</h2>
+    <p>
+        Really delete event?
+    </p>
+    <dl>
+        <dt>Title</dt>
+        <dd>{{event.title}}</dd>
+
+        <dt>Date</dt>
+        <dd>{{event.date}}</dd>
+
+        <dt>Tags</dt>
+        <dd><ng-tags tags="event.tags" /></dd>
+
+        <dt>Content</dt>
+        <dd>{{event.content}}</dd>
+    </dl>
+
+    <div class="panel-footer">
+        {{delete}}
+        <a href="#/events" title="List"><span class="glyphicon glyphicon-list"></span></a>
+        <a href="#/events/detail/{{event._id}}" title="Detail"><span class="glyphicon glyphicon-zoom-in"></span></a>
+        <a href="#/events/edit/{{event._id}}" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+        <a href="#" title="Delete" class="pull-right" ng-click="delete()"><span class="glyphicon glyphicon-remove"></span></a>
+    </div>
+</div>
