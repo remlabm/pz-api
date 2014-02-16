@@ -1,42 +1,28 @@
 {
-  "name": "pz-api",
-  "version": "0.0.1a",
-  "author": {
-    "name": ["Mike Balmer"]
+  "name": "projecty-api ",
+  "description": "",
+  "private": true,
+  "version": "0.1.0",
+  "main": "server.js",
+  "dependencies": {
+    "mongoose": "~3.6.15",
+    "restify": "~2.6.0",
+    "pwd": "0.0.2",
+    "gridfs-stream": "~0.4.0",
+    "async": "~0.2.9"
+  },
+  "devDependencies": {
+    "superagent": "~0.15.4",
+    "coffee-script": "~1.6.3",
+    "mocha": "~1.12.0"
+  },
+  "scripts": {
+    "start": "node ./index.js",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:remlabm/pz-api.git"
+    "url": "git://github.com/remlabm/pz-api.git"
   },
-  "scripts": {
-    "start": "node src/server.js",
-    "test": "grunt test",
-    "blanket": {
-      "pattern": "//^(?!.*node_modules.*$).*src\//"
-    }
-  },
-  "main": "src/server",
-  "readmeFilename": "README.md",
-  "dependencies": {
-    "node-restify-validation": "*",
-    "swagger-node-restify": "0.1.2",
-    "restify-mongoose": "0.1.0",
-    "restify": "~2.6.1",
-    "mongoose": "~3.8.3",
-    "supertest": "~0.8.3",
-    "chai": "~1.8.1",
-    "lodash": "2.4.1"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-jshint": "~0.6.0",
-    "grunt-contrib-watch": "~0.5.1",
-    "grunt-mocha-cli": "~1.0.1",
-    "grunt-nodemon": "0.2.0",
-    "grunt-mocha-cov": "0.0.7",
-    "grunt-concurrent": "0.4.3",
-    "matchdep": "~0.1.1",
-    "should": "~1.2.2",
-    "sinon": "~1.7.3"
-  }
+  "author": "Mike Balmer <me@remlabm.com>"
 }
