@@ -1,7 +1,9 @@
 var mongoose = require('mongoose')
     , restify  = require('restify')
     , async    = require('async')
-    , Event     = mongoose.model('Event');
+    , Event     = mongoose.model('Event')
+    , User = mongoose.model('User')
+    , UserCheckIn = mongoose.model('UserCheckIn');
 
 // ### List Events
 exports.query = function (req, res, next) {
@@ -52,3 +54,16 @@ exports.remove = function( req, res, next ){
   })
 };
 
+// ### Get Check In List
+exports.getCheckInList = function( req, res, next ){
+  console.log('controller')
+  Event.findById( req.params.event, function (err, event) {
+    if( err ) return next( err );
+    async.map( event.attending, UserCheckIn.getLatest.bind( UserCheckIn ), function( err, checkInList ){
+      if( err ) return next( err );
+      console.dir( checkInList )
+      res.send( checkInList );
+      return next()
+    });
+  })
+}

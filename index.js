@@ -4,6 +4,28 @@ var restify  = require('restify')
 
 moment().format();
 
+// Logs
+// ----------------------------------------------------------------------------
+var bunyan = require('bunyan');
+global.log = bunyan.createLogger({
+  name: 'server-api',
+  streams: [
+    {
+      level: 'info',
+      path: 'logs/api-info.log'  // log ERROR and above to a file
+//        stream: process.stdout,           // log INFO and above to stdout
+    },
+    {
+      level: 'error',
+      path: 'logs/api-error.log'  // log ERROR and above to a file
+    },
+    {
+      level: 'debug',
+      path: 'logs/debug.log'  // log ERROR and above to a file
+    }
+  ]
+});
+
 // Database
 // ----------------------------------------------------------------------------
 
@@ -24,28 +46,6 @@ server.use([
     restify.queryParser({ mapParams: false })
   , restify.bodyParser()
 ]);
-
-// Logs
-// ----------------------------------------------------------------------------
-var bunyan = require('bunyan');
-GLOBAL.log = bunyan.createLogger({
-  name: 'server-api',
-  streams: [
-    {
-      level: 'info',
-      path: 'logs/api-info.log'  // log ERROR and above to a file
-//        stream: process.stdout,           // log INFO and above to stdout
-    },
-    {
-      level: 'error',
-      path: 'logs/api-error.log'  // log ERROR and above to a file
-    },
-    {
-      level: 'debug',
-      path: 'logs/debug.log'  // log ERROR and above to a file
-    }
-  ]
-});
 
 server.on('after', restify.auditLogger({ log: log }));
 
@@ -70,6 +70,8 @@ server.post('/api/events', events.insert );
 server.get('/api/events/:event', events.findOne );
 server.patch('/api/events/:event', events.update );
 server.del('/api/events/:event', events.remove );
+
+server.get('/api/events/:event/track', events.getCheckInList );
 
 // Start up
 // ----------------------------------------------------------------------------

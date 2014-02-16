@@ -1,17 +1,17 @@
 var mongoose = require('mongoose')
-  , restify  = require('restify')
-  , pwd      = require('pwd')
-  , tokens   = require('../lib/tokens')
+    , restify  = require('restify')
+    , pwd      = require('pwd')
+    , tokens   = require('../lib/tokens');
 
 var UserSchema = new mongoose.Schema({
     username : { type: String }
   , password : { type: String }
   , salt     : { type: String }
   , friends  : [mongoose.Schema.ObjectId]
-})
+});
 
 UserSchema.static('register', function (username, password, callback) {
-    var User = this
+    var User = this;
     pwd.hash(password, function (err, salt, hash) {
         if (err) return callback(err)
 
@@ -19,7 +19,7 @@ UserSchema.static('register', function (username, password, callback) {
             username : username
           , password : hash.toString('base64')
           , salt     : salt
-        }
+        };
         
         User.create(data, function (err, user) {
             if (err) return callback(err)
@@ -57,5 +57,18 @@ UserSchema.static('getToken', function (username, password, callback) {
         })
     })
 })
+
+UserSchema.static('getLastCheckIn', function( userId, callback ){
+  this.findOne( { _id : userId }, function( err, user ){
+    if( err ) return callback( err );
+    var query = mongoose.model('UserCheckIn').where( { user: user._id } ).sort('-createdOn');
+    query.exec( function( err, checkIn ){
+      if( err ) return callback( err );
+
+      callback( null, { _id: userId, name: user.name, lastCheckIn: checkIn.dds, lastCheckInTime: checkIn.createdOn });
+    });
+
+  })
+});
 
 module.exports = mongoose.model('User', UserSchema)

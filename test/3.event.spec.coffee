@@ -34,6 +34,7 @@ describe 'Events', ->
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.equal res.statusCode, 301
         assert res.headers.location
+
         client.get "#{res.headers.location}?#{tokens.john}", ( err, req, res, event ) =>
           console.log('%d -> %j', res.statusCode, res.headers);
           assert.ifError err

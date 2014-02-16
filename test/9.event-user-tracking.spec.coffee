@@ -17,6 +17,8 @@ describe 'Event User Tracking', ->
       (next) => util.register 'diane', (err, @diane) => next(err)
     ], done
 
+  eventId = null;
+
   describe 'Create the Event', ->
 
     it 'should create a new event and return the event', ( done ) ->
@@ -41,19 +43,38 @@ describe 'Event User Tracking', ->
           assert.ifError err
           assert event._id
           assert.equal event._user, @john._id
+          assert.deepEqual event.attending, eventData.attending
+          eventId = event._id
           done()
 
-#  describe 'Check-in User', ->
-#    it 'should return an array of events', ( done ) ->
-#      tokens =
-#        john : qs.stringify { token: @john.token }
-#
-#      client.post "/check-in?#{tokens.john}", checkInData, (err, req, res, obj) ->
-#        console.log('%d -> %j', res.statusCode, res.headers);
-#        assert.ifError err
-#        assert.equal obj.status, 'ok'
-#        done()
-#
+  describe 'Get Tracking List', ->
+
+    checkInData = {
+      location: {
+        dds: "33.979444, -118.452778"
+      }
+    }
+
+    it 'should allow a user to update their locaiton', (done) ->
+      tokens =
+        john : qs.stringify { token: @john.token }
+
+      client.post "/check-in?#{tokens.john}", checkInData, (err, req, res, obj) ->
+        console.log('%d -> %j', res.statusCode, res.headers);
+        assert.ifError err
+        assert.equal obj.status, 'ok'
+        done()
+
+    it 'should return an array of events', ( done ) ->
+      tokens =
+        john : qs.stringify { token: @john.token }
+
+      client.get "/api/events/#{eventId}/track?#{tokens.john}", ( err, req, res, userList ) =>
+        console.log('%d -> %j', res.statusCode, res.headers);
+        assert.ifError err
+        console.log( userList)
+        done()
+
 #    it 'should return array of users', ( done ) ->
 #      tokens =
 #        john : qs.stringify { token: @john.token }
