@@ -47,7 +47,7 @@ describe 'Event User Tracking', ->
           eventId = event._id
           done()
 
-  describe 'Get Tracking List', ->
+  describe 'Get User Beacons', ->
 
     checkInData = {
       location: {
