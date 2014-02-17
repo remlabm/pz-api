@@ -12,13 +12,12 @@ var UserCheckInSchema = new mongoose.Schema({
 });
 
 UserCheckInSchema.static('getLatest', function( userId, callback ){
-  this.findOne( { _user : userId }, function( err, checkIn ){
-    if( err ) return callback( err );
-    if( _.isEmpty( checkIn )){
-      return callback( null, { userId : userId, lastLocation: null, lastSeen: null } );
-    }
-    return callback( null, { userId : userId, lastLocation: checkIn.location.dds, lastSeen: checkIn.createdOn } );
-  })
+  this.findOne( { _user : userId })
+      .where('location.dds').exists( true )
+      .exec( function( err, checkIn ){
+        if( err ) return callback( err );
+        return callback( null, checkIn );
+      })
 });
 
 

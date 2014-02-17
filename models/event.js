@@ -10,7 +10,8 @@ var EventSchema = new mongoose.Schema({
     dds : { type: String, required: true }
   },
   date : { type: Date },
-  createdOn : { type: Date, default: Date.now }
+  createdOn : { type: Date, default: Date.now },
+  beacons: { type: mongoose.Schema.Types.Mixed }
 });
 
 EventSchema.hasMany('Users', {through: 'attending'});

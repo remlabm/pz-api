@@ -26,7 +26,7 @@ describe 'Event User Tracking', ->
         name: "Test Event",
         date: moment('April 25, 2014'),
         location : {
-          dds : '36.1749700,-115.1372200'
+          dds : 'Las Vagas, Nevada'
         },
         attending: [ @john._id, @jill._id, @diane._id ]
       }
@@ -55,6 +55,8 @@ describe 'Event User Tracking', ->
       }
     }
 
+    johnsDistance = 462881
+
     it 'should allow a user to update their locaiton', (done) ->
       tokens =
         john : qs.stringify { token: @john.token }
@@ -65,50 +67,25 @@ describe 'Event User Tracking', ->
         assert.equal obj.status, 'ok'
         done()
 
+    it 'should update event user beacons', (done) ->
+      tokens =
+        john : qs.stringify { token: @john.token }
+
+      client.post "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, obj ) =>
+        console.log('%d -> %j', res.statusCode, res.headers);
+        assert.ifError err
+        johnsBeacon = _.find( obj.beacons, { '_user' : @john._id });
+        assert.equal johnsBeacon.distance.value, johnsDistance
+        done()
+
     it 'should return an array of events', ( done ) ->
       tokens =
         john : qs.stringify { token: @john.token }
 
-      client.get "/api/events/#{eventId}/track?#{tokens.john}", ( err, req, res, userList ) =>
+      client.get "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, obj ) =>
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
-        console.log( userList)
+        johnsBeacon = _.find( obj, { '_user' : @john._id });
+        assert.equal johnsBeacon.distance.value, johnsDistance
         done()
 
-#    it 'should return array of users', ( done ) ->
-#      tokens =
-#        john : qs.stringify { token: @john.token }
-#
-#      client.get "/api/events/#{eventData._id}?#{tokens.john}", ( err, req, res, event ) =>
-#        assert.ifError err
-#        console.log('%d -> %j', res.statusCode, res.headers);
-#        assert.equal event._id, eventData._id
-#        done()
-#
-#  describe 'Update', ->
-#    eventPatchData = {
-#      name: "Birthday Event"
-#    }
-#
-#    it 'should update event name to Birthday Event', ( done ) ->
-#      tokens =
-#        john : qs.stringify { token: @john.token }
-#
-#      client.patch "/api/events/#{eventData._id}?#{tokens.john}",  eventPatchData, ( err, req, res, event ) =>
-#        assert.ifError err
-#        console.log('%d -> %j', res.statusCode, res.headers);
-#        assert.equal event.name, eventPatchData.name
-#        assert.equal event._user, @john._id
-#        done()
-#
-##  describe 'Delete', =>
-##    it 'should delete event', ( done ) ->
-##      tokens =
-##        john : qs.stringify { token: @john.token }
-##
-##      client.del "/api/events/#{eventData._id}?#{tokens.john}", ( err, req, res ) =>
-##        assert.ifError err
-##        console.log('%d -> %j', res.statusCode, res.headers);
-##        done()
-#
-#

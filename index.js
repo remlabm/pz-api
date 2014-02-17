@@ -71,7 +71,8 @@ server.get('/api/events/:event', events.findOne );
 server.patch('/api/events/:event', events.update );
 server.del('/api/events/:event', events.remove );
 
-server.get('/api/events/:event/track', events.getCheckInList );
+server.post('/api/events/:event/beacons', events.updateUserBeacons );
+server.get('/api/events/:event/beacons', events.getUserBeacons );
 
 // Start up
 // ----------------------------------------------------------------------------

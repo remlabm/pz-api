@@ -1,5 +1,7 @@
 var mongoose = require('mongoose')
     , restify  = require('restify')
+    , qs = require('querystring')
+    , _ = require('lodash')
     , async    = require('async')
     , Event     = mongoose.model('Event')
     , User = mongoose.model('User')
@@ -55,15 +57,62 @@ exports.remove = function( req, res, next ){
 };
 
 // ### Get Check In List
-exports.getCheckInList = function( req, res, next ){
+exports.getUserBeacons = function( req, res, next ){
   console.log('controller')
   Event.findById( req.params.event, function (err, event) {
     if( err ) return next( err );
-    async.map( event.attending, UserCheckIn.getLatest.bind( UserCheckIn ), function( err, checkInList ){
-      if( err ) return next( err );
-      console.dir( checkInList )
-      res.send( checkInList );
-      return next()
-    });
+    res.send( event.beacons );
+    next();
   })
-}
+};
+
+// ### Get Check In List
+exports.updateUserBeacons = function( req, res, next ){
+  Event.findById( req.params.event, function (err, event) {
+    if( err ) return next( err );
+
+    UserCheckIn.find( { _user: { $in: event.attending } })
+        .where('location.dds').exists( true )
+        .exec( function( err, checkInList ){
+          if( err ) return next( err );
+          getMapData( _.pluck( checkInList, 'location'), event.location.dds, function( err, mapData){
+            if( err ) return next( err );
+
+            //TODO: this is sketch
+            var beacons = [];
+            _( checkInList ).forEach( function( checkIn, idx ){
+              beacons[idx] = _.merge( mapData[idx], { _user: checkIn._user } );
+            });
+
+            event.beacons = beacons;
+            event.save(function( err, event ){
+              if( err ) return next( err );
+
+              res.send( event );
+              next();
+            });
+          });
+  })
+  })
+};
+
+var getMapData = function( origins, destination, callback ){
+
+  var client = restify.createJsonClient({
+    url: 'http://maps.googleapis.com'
+  });
+
+  var q = qs.stringify({
+    origins: _.pluck( origins, 'dds').toString("|"),
+    destinations : destination,
+    sensor: false
+  });
+
+  client.get({
+    path: "/maps/api/distancematrix/json?"+ q
+  }, function( err, req, res, obj ){
+    if( err ) return callback( err );
+
+    return callback( null, obj.rows[0].elements )
+  });
+};
