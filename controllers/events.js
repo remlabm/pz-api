@@ -88,7 +88,7 @@ exports.updateUserBeacons = function( req, res, next ){
             event.save(function( err, event ){
               if( err ) return next( err );
 
-              res.send( event );
+              res.send( event.beacons );
               next();
             });
           });

@@ -76,7 +76,6 @@ server.get('/api/events/:event/beacons', events.getUserBeacons );
 
 // Start up
 // ----------------------------------------------------------------------------
-
 module.exports = server;
 
 if (!module.parent) {

@@ -71,10 +71,10 @@ describe 'Event User Tracking', ->
       tokens =
         john : qs.stringify { token: @john.token }
 
-      client.post "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, obj ) =>
+      client.post "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, beacons ) =>
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
-        johnsBeacon = _.find( obj.beacons, { '_user' : @john._id });
+        johnsBeacon = _.find( beacons, { '_user' : @john._id });
         assert.equal johnsBeacon.distance.value, johnsDistance
         done()
 
@@ -82,10 +82,10 @@ describe 'Event User Tracking', ->
       tokens =
         john : qs.stringify { token: @john.token }
 
-      client.get "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, obj ) =>
+      client.get "/api/events/#{eventId}/beacons?#{tokens.john}", ( err, req, res, beacons ) =>
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
-        johnsBeacon = _.find( obj, { '_user' : @john._id });
+        johnsBeacon = _.find( beacons, { '_user' : @john._id });
         assert.equal johnsBeacon.distance.value, johnsDistance
         done()
 
