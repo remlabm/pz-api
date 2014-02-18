@@ -1,7 +1,6 @@
 var mongoose = require('mongoose')
     , restify = require('restify')
     , async = require('async')
-    , pwd = require('pwd')
     , tokens = require('../lib/tokens')
     , dispatch = require('../lib/dispatch')
     , User = mongoose.model('User')

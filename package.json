@@ -1,15 +1,18 @@
 {
-  "name": "projecty-api ",
+  "name": "projectZ-api ",
   "description": "",
   "private": true,
   "version": "0.1.0",
   "main": "server.js",
   "dependencies": {
     "mongoose": "~3.6.15",
+    "mongo-releation": "0.4.0",
     "restify": "~2.6.0",
-    "pwd": "0.0.2",
     "gridfs-stream": "~0.4.0",
-    "async": "~0.2.9"
+    "async": "~0.2.9",
+    "lodash": "~2.4.1",
+    "pwd": "0.0.3",
+    "crypto": "0.0.3"
   },
   "devDependencies": {
     "superagent": "~0.15.4",

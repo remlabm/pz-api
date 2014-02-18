@@ -78,7 +78,7 @@ describe 'Event User Tracking', ->
         assert.equal johnsBeacon.distance.value, johnsDistance
         done()
 
-    it 'should return an array of events', ( done ) ->
+    it 'should return an array of user beacons', ( done ) ->
       tokens =
         john : qs.stringify { token: @john.token }
 
