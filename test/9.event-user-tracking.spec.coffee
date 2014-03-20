@@ -23,11 +23,11 @@ describe 'Event User Tracking', ->
 
     it 'should create a new event and return the event', ( done ) ->
       eventData = {
-        name: "Test Event",
-        date: moment('April 25, 2014'),
-        location : {
-          dds : 'Las Vagas, Nevada'
-        },
+        name: "Test Event"
+        date: moment('April 25, 2014')
+        location :
+          name: 'Palms Casino'
+          address : 'Las Vagas, Nevada'
         attending: [ @john._id, @jill._id, @diane._id ]
       }
 
@@ -36,10 +36,11 @@ describe 'Event User Tracking', ->
 
       client.post "/api/events?#{tokens.john}", eventData, ( err, req, res, event ) =>
         console.log('%d -> %j', res.statusCode, res.headers);
+        console.log( err )
         assert.equal res.statusCode, 301
         assert res.headers.location
         client.get "#{res.headers.location}?#{tokens.john}", ( err, req, res, event ) =>
-          console.log('%d -> %j', res.statusCode, res.headers);
+          console.info('%d -> %j', res.statusCode, res.headers);
           assert.ifError err
           assert event._id
           assert.equal event._user, @john._id
@@ -55,7 +56,7 @@ describe 'Event User Tracking', ->
       }
     }
 
-    johnsDistance = 462881
+    johnsDistance = 787621
 
     it 'should allow a user to update their locaiton', (done) ->
       tokens =

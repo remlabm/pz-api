@@ -33,7 +33,7 @@ UserSchema.static('register', function (username, password, callback) {
             })
         })
     })
-})
+});
 
 UserSchema.static('getToken', function (username, password, callback) {
     this.findOne({ username: username }, function (err, user) {
@@ -56,7 +56,7 @@ UserSchema.static('getToken', function (username, password, callback) {
             }
         })
     })
-})
+});
 
 UserSchema.static('getLastCheckIn', function( userId, callback ){
   this.findOne( { _id : userId }, function( err, user ){

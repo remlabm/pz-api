@@ -18,7 +18,7 @@ exports.login = function (req, res, next) {
 
 // ### Auth
 exports.authenticate = function (req, res, next) {
-  tokens.verify(req.query.token, function (err, userId) {
+  tokens.verify( req.header('Auth-Token') || req.query.token, function (err, userId) {
     if (err || !userId) {
       res.send(new restify.NotAuthorizedError);
       return

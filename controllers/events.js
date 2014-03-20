@@ -3,6 +3,7 @@ var mongoose = require('mongoose')
     , qs = require('querystring')
     , _ = require('lodash')
     , async    = require('async')
+    , moment = require('moment')
     , Event     = mongoose.model('Event')
     , User = mongoose.model('User')
     , UserCheckIn = mongoose.model('UserCheckIn');
@@ -75,13 +76,17 @@ exports.updateUserBeacons = function( req, res, next ){
         .where('location.dds').exists( true )
         .exec( function( err, checkInList ){
           if( err ) return next( err );
-          getMapData( _.pluck( checkInList, 'location'), event.location.dds, function( err, mapData){
+          getMapData( _.pluck( checkInList, 'location'), event.location.address, function( err, mapData){
             if( err ) return next( err );
 
             //TODO: this is sketch
             var beacons = [];
             _( checkInList ).forEach( function( checkIn, idx ){
-              beacons[idx] = _.merge( mapData[idx], { _user: checkIn._user } );
+              beacons[idx] = _.merge( mapData[idx], {
+                _user: checkIn._user,
+                checkInDate: checkIn.createdOn,
+                estimatedArrival: moment( checkIn.createdOn ).add('seconds', mapData[idx].duration.value).format()
+              });
             });
 
             event.beacons = beacons;
@@ -91,8 +96,8 @@ exports.updateUserBeacons = function( req, res, next ){
               res.send( event.beacons );
               next();
             });
-          });
-  })
+        });
+    })
   })
 };
 
@@ -107,7 +112,6 @@ var getMapData = function( origins, destination, callback ){
     destinations : destination,
     sensor: false
   });
-
   client.get({
     path: "/maps/api/distancematrix/json?"+ q
   }, function( err, req, res, obj ){

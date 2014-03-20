@@ -11,13 +11,16 @@
     "gridfs-stream": "~0.4.0",
     "async": "~0.2.9",
     "lodash": "~2.4.1",
+    "moment": "2.5.1",
+    "bunyan": "0.22.1",
     "pwd": "0.0.3",
     "crypto": "0.0.3"
   },
   "devDependencies": {
     "superagent": "~0.15.4",
     "coffee-script": "~1.6.3",
-    "mocha": "~1.12.0"
+    "mocha": "~1.12.0",
+    "nodemon": "^1.0.15"
   },
   "scripts": {
     "start": "node ./index.js",
@@ -27,5 +30,5 @@
     "type": "git",
     "url": "git://github.com/remlabm/pz-api.git"
   },
-  "author": "Mike Balmer <me@remlabm.com>"
+  "author": "Mike Balmer"
 }

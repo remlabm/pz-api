@@ -38,18 +38,18 @@ describe 'Authentication', ->
     q = qs.stringify { test: 1 }
     client.get '/echo?#{q}', (err, req, res, obj) ->
       assert err
-      console.log('%d -> %j', res.statusCode, res.headers);
+      console.info('%d -> %j', res.statusCode, res.headers);
       assert.equal err.statusCode, 403
       assert.equal err.name, 'NotAuthorizedError'
       done()
 
   it 'should allow access with a token', (done) ->
     client.post '/login', userData, (err, req, res, obj) ->
-      console.log('%d -> %j', res.statusCode, res.headers);
+      console.info('%d -> %j', res.statusCode, res.headers);
       assert obj.token
       q = qs.stringify { test: 1, token: obj.token }
       client.get "/echo?#{q}", (err, req, res, obj) ->
-        console.log('%d -> %j', res.statusCode, res.headers);
+        console.info('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
         assert.equal qs.stringify(obj), q
         done()
@@ -57,7 +57,7 @@ describe 'Authentication', ->
   it 'should allow a user to update their locaiton', (done) ->
     q = qs.stringify { token: userData.token }
     client.post "/check-in?#{q}", checkInData, (err, req, res, obj) ->
-      console.log('%d -> %j', res.statusCode, res.headers);
+      console.info('%d -> %j', res.statusCode, res.headers);
       assert.ifError err
       assert.equal obj.status, 'ok'
       done()

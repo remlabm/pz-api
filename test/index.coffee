@@ -1,5 +1,4 @@
 restify = require 'restify'
-restify = require 'restify'
 bunyan = require 'bunyan'
 
 global.server = require './../'
@@ -13,7 +12,7 @@ global.log = bunyan.createLogger {
     streams: [
       {
         level: 'info'
-        path: 'logs/api-client-info.log'
+        stream: process.stdout
       }
       {
         level: 'error'
@@ -27,10 +26,10 @@ global.log = bunyan.createLogger {
   }
 
 global.client = restify.createJsonClient {
-  url: 'http://localhost:8080'
+  url: 'http://localhost:8081'
   log: log
 }
 
 before (done) ->
-  server.listen 8080, '127.0.0.1', done
+  server.listen 8081, '127.0.0.1', done
 

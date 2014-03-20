@@ -15,17 +15,14 @@ describe 'Events', ->
       (next) => util.register 'john', (err, @john) => next(err)
     ], done
 
-
-  eventData = {
-    name: "Test Event",
-    date: moment('April 25, 2014'),
-    location : {
-      dds : '36.1749700,-115.1372200'
-    }
-  }
+  eventData =
+    name: "Test Event"
+    date: moment('April 25, 2014')
+    location :
+      name: 'Palms Casino'
+      address: '4321 W Flamingo Rd, Las Vegas, NV 89103'
 
   describe 'Create', ->
-
     it 'should create a new event and return the event', ( done ) ->
       tokens =
         john : qs.stringify { token: @john.token }
@@ -41,6 +38,7 @@ describe 'Events', ->
           assert event._id
           assert.equal event._user, @john._id
           eventData._id = event._id
+          assert.equal event.location, event.location
           done()
 
   describe 'Query', ->

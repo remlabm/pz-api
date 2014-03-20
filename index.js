@@ -12,8 +12,8 @@ global.log = bunyan.createLogger({
   streams: [
     {
       level: 'info',
-      path: 'logs/api-info.log'  // log ERROR and above to a file
-//        stream: process.stdout,           // log INFO and above to stdout
+//      path: 'logs/api-info.log'  // log ERROR and above to a file
+        stream: process.stdout           // log INFO and above to stdout
     },
     {
       level: 'error',

@@ -1,4 +1,5 @@
 qs = require 'querystring'
+_ = require 'lodash'
 
 random = ->
   (Math.floor Math.random() * 1e8).toString(32)
