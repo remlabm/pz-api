@@ -28,7 +28,7 @@ describe 'Event User Tracking', ->
         location :
           name: 'Palms Casino'
           address : 'Las Vagas, Nevada'
-        attending: [ @john._id, @jill._id, @diane._id ]
+        invited: [ @john._id, @jill._id, @diane._id ]
       }
 
       tokens =
@@ -36,7 +36,6 @@ describe 'Event User Tracking', ->
 
       client.post "/api/events?#{tokens.john}", eventData, ( err, req, res, event ) =>
         console.log('%d -> %j', res.statusCode, res.headers);
-        console.log( err )
         assert.equal res.statusCode, 301
         assert res.headers.location
         client.get "#{res.headers.location}?#{tokens.john}", ( err, req, res, event ) =>
@@ -44,7 +43,7 @@ describe 'Event User Tracking', ->
           assert.ifError err
           assert event._id
           assert.equal event._user, @john._id
-          assert.deepEqual event.attending, eventData.attending
+          assert.deepEqual event.invited, eventData.invited
           eventId = event._id
           done()
 

@@ -59,7 +59,6 @@ exports.remove = function( req, res, next ){
 
 // ### Get Check In List
 exports.getUserBeacons = function( req, res, next ){
-  console.log('controller')
   Event.findById( req.params.event, function (err, event) {
     if( err ) return next( err );
     res.send( event.beacons );
@@ -72,7 +71,7 @@ exports.updateUserBeacons = function( req, res, next ){
   Event.findById( req.params.event, function (err, event) {
     if( err ) return next( err );
 
-    UserCheckIn.find( { _user: { $in: event.attending } })
+    UserCheckIn.find( { _user: { $in: event.invited } })
         .where('location.dds').exists( true )
         .exec( function( err, checkInList ){
           if( err ) return next( err );
