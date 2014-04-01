@@ -5,6 +5,7 @@ var mongoose = require('mongoose')
     , async    = require('async')
     , moment = require('moment')
     , Event     = mongoose.model('Event')
+  , EventBeacon = mongoose.model('EventBeacon')
     , User = mongoose.model('User')
     , UserCheckIn = mongoose.model('UserCheckIn');
 
@@ -22,10 +23,14 @@ exports.query = function (req, res, next) {
 
 // ### Get Event Details
 exports.findOne = function (req, res, next) {
-  Event.findById( req.params.event, function (err, event) {
-    if( err ) return next( err );
-    res.send(event);
-    return next()
+  Event.findById( req.params.event)
+    .populate( { path: 'beacons' } )
+    .populate( { path: 'invited', select: 'username' })
+    .exec( function (err, event) {
+      next.ifError( err );
+
+      res.send( event.toObject() );
+      next()
   })
 };
 
@@ -69,32 +74,32 @@ exports.getUserBeacons = function( req, res, next ){
 // ### Get Check In List
 exports.updateUserBeacons = function( req, res, next ){
   Event.findById( req.params.event, function (err, event) {
-    if( err ) return next( err );
+    next.ifError( err );
 
     UserCheckIn.find( { _user: { $in: event.invited } })
         .where('location.dds').exists( true )
         .exec( function( err, checkInList ){
-          if( err ) return next( err );
-          getMapData( _.pluck( checkInList, 'location'), event.location.address, function( err, mapData){
-            if( err ) return next( err );
+        next.ifError( err );
+          getMapData( _.pluck( checkInList, 'location'), event.location.address, function( err, mapData ){
+            next.ifError( err );
 
             //TODO: this is sketch
             var beacons = [];
             _( checkInList ).forEach( function( checkIn, idx ){
-              beacons[idx] = _.merge( mapData[idx], {
-                _user: checkIn._user,
-                checkInDate: checkIn.createdOn,
-                estimatedArrival: moment( checkIn.createdOn ).add('seconds', mapData[idx].duration.value).format()
-              });
+              beacons[idx] = _.merge( mapData[idx], { _user: checkIn._user, checkInAt: checkIn.createdOn } );
+            });
+            console.log( beacons )
+
+            EventBeacon.create( beacons, function( err, _beacons ){
+              next.ifError( err );
+
+              event.save( { beacons: beacons }, function( err, event ){
+                next.ifError( err );
+                res.send( event );
+                next();
+              })
             });
 
-            event.beacons = beacons;
-            event.save(function( err, event ){
-              if( err ) return next( err );
-
-              res.send( event.beacons );
-              next();
-            });
         });
     })
   })

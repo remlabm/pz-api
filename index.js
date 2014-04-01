@@ -31,8 +31,9 @@ global.log = bunyan.createLogger({
 
 mongoose.connect('mongodb://localhost/pz-api');
 
-require('./models/event');
 require('./models/user');
+require('./models/event-beacon');
+require('./models/event');
 require('./models/user-check-in')
 
 // HTTP Server

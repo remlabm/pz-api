@@ -75,7 +75,7 @@ describe 'Event User Tracking', ->
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
         johnsBeacon = _.find( beacons, { '_user' : @john._id });
-        assert.equal johnsBeacon.distance.value, johnsDistance
+        assert.equal johnsBeacon.distance, johnsDistance
         done()
 
     it 'should return an array of user beacons', ( done ) ->
@@ -86,6 +86,6 @@ describe 'Event User Tracking', ->
         console.log('%d -> %j', res.statusCode, res.headers);
         assert.ifError err
         johnsBeacon = _.find( beacons, { '_user' : @john._id });
-        assert.equal johnsBeacon.distance.value, johnsDistance
+        assert.isNotNull johnsBeacon.arriveAt
         done()
 

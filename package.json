@@ -14,7 +14,10 @@
     "moment": "2.5.1",
     "bunyan": "0.22.1",
     "pwd": "0.0.3",
-    "crypto": "0.0.3"
+    "crypto": "0.0.3",
+    "bluebird": "^1.1.1",
+    "mongoose-bluebird-utils": "0.0.9",
+    "mongoose-ref-promises": "^0.1.1"
   },
   "devDependencies": {
     "superagent": "~0.15.4",

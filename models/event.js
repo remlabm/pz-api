@@ -1,9 +1,8 @@
 var mongoose = require('mongoose')
-  , request = require('request')
-  , rel = require('mongo-relation');
+  , User = mongoose.model('User');
 
 var EventSchema = new mongoose.Schema({
-  _user: { type: mongoose.Schema.Types.ObjectId },
+  _user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   name: { type: String, required: true },
   type: { type: String, required: true, default: 'private' },
   location: {
@@ -12,10 +11,8 @@ var EventSchema = new mongoose.Schema({
   },
   date: { type: Date },
   createdOn: { type: Date, default: Date.now },
-  beacons: { type: mongoose.Schema.Types.Mixed },
-  invited: [ mongoose.Schema.Types.ObjectId ]
+  beacons: [ { type: mongoose.Schema.Types.ObjectId, ref: 'EventBeacon'} ],
+  invited: [ { type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
-
-EventSchema.hasMany('Users', {through: 'invited'});
 
 module.exports = mongoose.model('Event', EventSchema);
